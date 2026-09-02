@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Text Effect</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        height: 100vh;
+        background: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+    }
+
+    #text-container {
+        width: 95%;
+        max-width: 900px;
+        text-align: center;
+    }
+
+    .line {
+        height: 70px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: nowrap;
+    }
+
+    .word {
+        display: inline-block;
+        font-size: 28px;
+        font-weight: bold;
+
+        /* Bắt đầu màu xanh */
+        color: #00ff88;
+
+        animation: colorChange 2s forwards;
+    }
+
+    @keyframes colorChange {
+        0% {
+            color: #00ff88;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        20% {
+            opacity: 1;
+            color: #00ff88;
+        }
+
+        60% {
+            color: #ff69b4;
+            opacity: 1;
+        }
+
+        100% {
+            color: #ff1493;
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+    }
+
+    @media (max-width: 600px) {
+        .line {
+            gap: 7px;
+            height: 55px;
+        }
+
+        .word {
+            font-size: 18px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div id="text-container">
+    <div class="line" id="line1"></div>
+    <div class="line" id="line2"></div>
+</div>
+
+<script>
+
+const text = `
+Là vì anh quá yếu đuối chỉ tìm trong giấc mơ một mình anh gây thơ
+chỉ là người đứng chờ chạy đi đâu em hỡi chạy vào trong giấc mơ
+một mình anh tìm lối chẳng thể nào thoát ra
+`;
+
+const words = text.trim().split(/\s+/);
+
+const line1 = document.getElementById("line1");
+const line2 = document.getElementById("line2");
+
+let index = 0;
+
+/*
+    Mỗi lần hiển thị:
+    - tối đa 5 chữ hàng trên
+    - tối đa 5 chữ hàng dưới
+*/
+
+function showNextGroup() {
+
+    line1.innerHTML = "";
+    line2.innerHTML = "";
+
+    // Lấy tối đa 10 chữ
+    const group = words.slice(index, index + 10);
+
+    // 5 chữ đầu → hàng 1
+    // 5 chữ sau → hàng 2
+    group.forEach((word, i) => {
+
+        const span = document.createElement("span");
+
+        span.className = "word";
+        span.textContent = word;
+
+        if (i < 5) {
+            line1.appendChild(span);
+        } else {
+            line2.appendChild(span);
+        }
+    });
+
+    index += 10;
+
+    // Nếu hết câu thì quay lại từ đầu
+    if (index >= words.length) {
+        index = 0;
+    }
+}
+
+/*
+    Hiển thị nhóm đầu tiên
+*/
+showNextGroup();
+
+/*
+    Cứ 2 giây chuyển sang nhóm chữ tiếp theo
+*/
+setInterval(showNextGroup, 2000);
+
+</script>
+
+</body>
+</html>
